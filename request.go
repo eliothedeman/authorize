@@ -4,8 +4,8 @@ import "github.com/eliothedeman/authorize/auth"
 
 // An api request for authorize.net
 type Request interface {
-	Method() string   // the method name of the request
-	EndPoint() string // url endpoint for the request. This should include the slash
+	Method() string // the method name of the request
+	ResponseStruct() interface{}
 	SetAuth(a *auth.MerchantAuth)
 }
 

@@ -12,8 +12,8 @@ import (
 
 const (
 	BODY_TYPE      = "application/json"
-	SANDBOX_URL    = "https://apitest.authorize.net"
-	PRODUCTION_URL = "https://api.authorize.net"
+	SANDBOX_URL    = "https://apitest.authorize.net/xml/v1/request.api"
+	PRODUCTION_URL = "https://api.authorize.net/xml/v1/request.api"
 )
 
 // A base client for the authorize.net api
@@ -45,38 +45,36 @@ func NewClient(name, transactionKey string, production bool) *Client {
 	return c
 }
 
-func (c *Client) Do(r Request) (*Response, error) {
+func (c *Client) Do(r Request) error {
 	r.SetAuth(c.auth)
 	buff, err := json.Marshal(RequestBody(r))
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	c.buffer.Reset()
 	c.buffer.Write(buff)
 
-	req, err := http.NewRequest("POST", c.url+r.EndPoint(), c.buffer)
+	req, err := http.NewRequest("POST", c.url, c.buffer)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	req.Header.Add("Content-Type", "application/json")
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	log.Println(string(buff))
 
 	buff, err = ioutil.ReadAll(resp.Body)
 	resp.Body.Close()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	response := &Response{}
-
+	response := r.ResponseStruct()
 	err = json.Unmarshal(buff, response)
 
 	log.Println(string(buff))
-	return response, err
+	return err
 }
