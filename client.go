@@ -45,11 +45,13 @@ func NewClient(name, transactionKey string, production bool) *Client {
 	return c
 }
 
-func (c *Client) Do(r Request) error {
+func (c *Client) Do(r Request) (resp *Response) {
+	resp = &Response{}
 	r.SetAuth(c.auth)
 	buff, err := json.Marshal(RequestBody(r))
 	if err != nil {
-		return err
+		resp.err = err
+		return
 	}
 
 	c.buffer.Reset()
@@ -57,24 +59,25 @@ func (c *Client) Do(r Request) error {
 
 	req, err := http.NewRequest("POST", c.url, c.buffer)
 	if err != nil {
-		return err
+		resp.err = err
+		return
 	}
-	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Content-Type", "application/json; charset=utf-8")
 
-	resp, err := c.httpClient.Do(req)
+	httpResp, err := c.httpClient.Do(req)
 	if err != nil {
-		return err
+		resp.err = err
+		return
 	}
 
-	buff, err = ioutil.ReadAll(resp.Body)
-	resp.Body.Close()
+	buff, err = ioutil.ReadAll(httpResp.Body)
+	httpResp.Body.Close()
 	if err != nil {
-		return err
+		resp.err = err
+		return
 	}
 
-	response := r.ResponseStruct()
-	err = json.Unmarshal(buff, response)
-
-	log.Println(string(buff))
-	return err
+	resp = ParseResponse(buff)
+	log.Println(resp.err)
+	return
 }

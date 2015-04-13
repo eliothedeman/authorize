@@ -1,7 +1,6 @@
 package cim
 
 import (
-	"log"
 	"math/rand"
 	"testing"
 
@@ -46,12 +45,9 @@ func TestCreateCustomerProfile(t *testing.T) {
 	r.Profile.PaymentProfile.BillTo.Address = randomString(10)
 	r.Profile.PaymentProfile.BillTo.Company = randomString(10)
 
-	err := c.Do(r)
+	resp := c.Do(r)
 
-	if err != nil {
-		t.Fail()
+	if resp.Error() != "" {
+		t.Error(resp.Error())
 	}
-
-	log.Println(r.Response)
-
 }
