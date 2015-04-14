@@ -57,11 +57,15 @@ func randomProfile() Profile {
 	return p
 }
 
-func TestCreateCustomerProfile(t *testing.T) {
-	c := authorize.NewTestClient()
+func randomCreateProfileRequest() *CreateCustomerProfileRequest {
 	r := &CreateCustomerProfileRequest{}
 	r.Profile = randomProfile()
+	return r
+}
 
+func TestCreateCustomerProfile(t *testing.T) {
+	c := authorize.NewTestClient()
+	r := randomCreateProfileRequest()
 	resp := c.Do(r)
 
 	if resp.Err != nil {
@@ -70,5 +74,13 @@ func TestCreateCustomerProfile(t *testing.T) {
 }
 
 func TestCreateCustomerProfileBadCard(t *testing.T) {
+	c := authorize.NewTestClient()
+	r := randomCreateProfileRequest()
+	r.Profile.PaymentProfile.Payment.CreditCard.CardNumber = randomString(13)
+	resp := c.Do(r)
+
+	if resp.Err != authorize.INVALID_CARD_NUMBER {
+		t.Error("Expected INVALID_CARD_NUMBER got", resp.Err)
+	}
 
 }
