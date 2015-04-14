@@ -31,7 +31,6 @@ type Response struct {
 }
 
 func ParseResponse(buff []byte) (r *Response) {
-	log.Println(string(buff))
 	r = &Response{}
 	r.Err = json.Unmarshal(buff, r)
 

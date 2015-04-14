@@ -1,6 +1,7 @@
 package cim
 
 import (
+	"log"
 	"math/rand"
 	"testing"
 	"time"
@@ -14,6 +15,7 @@ const (
 )
 
 func init() {
+	log.SetFlags(log.Llongfile)
 	rand.Seed(time.Now().Unix())
 }
 func randomString(length int) string {
