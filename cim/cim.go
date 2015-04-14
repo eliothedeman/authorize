@@ -2,10 +2,10 @@ package cim
 
 // Customer Information Manger
 type Profile struct {
-	MerchantCustomerId string         `json:"merchantCustomerId,omitempty"`
-	Description        string         `json:"description,omitempty"`
-	Email              string         `json:"email,omitempty"`
-	PaymentProfile     PaymentProfile `json:"paymentProfiles,omitempty"`
+	MerchantCustomerId string          `json:"merchantCustomerId,omitempty"`
+	Description        string          `json:"description,omitempty"`
+	Email              string          `json:"email,omitempty"`
+	PaymentProfile     *PaymentProfile `json:"paymentProfiles,omitempty"`
 }
 
 type PaymentProfile struct {

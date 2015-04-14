@@ -3,8 +3,8 @@ package authorize
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
-	"log"
 	"net/http"
 
 	"github.com/eliothedeman/authorize/auth"
@@ -63,7 +63,6 @@ func (c *Client) Do(r Request) (resp *Response) {
 		return
 	}
 	req.Header.Add("Content-Type", "application/json; charset=utf-8")
-
 	httpResp, err := c.httpClient.Do(req)
 	if err != nil {
 		resp.err = err
@@ -71,6 +70,15 @@ func (c *Client) Do(r Request) (resp *Response) {
 	}
 
 	buff, err = ioutil.ReadAll(httpResp.Body)
+
+	// this is super gross, but auth.net sends us back responses with garbage at the beginning
+	// while using the json api
+	index := bytes.Index(buff, []byte("{"))
+	buff = buff[index:]
+	if index == -1 {
+		resp.err = errors.New("Invalid json")
+		return
+	}
 	httpResp.Body.Close()
 	if err != nil {
 		resp.err = err
@@ -78,6 +86,5 @@ func (c *Client) Do(r Request) (resp *Response) {
 	}
 
 	resp = ParseResponse(buff)
-	log.Println(resp.err)
 	return
 }

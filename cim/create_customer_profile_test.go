@@ -29,21 +29,34 @@ func randomNumberString(length int) string {
 	return string(str)
 }
 
+func randomPaymenProfile() *PaymentProfile {
+	cred := &CreditCard{}
+	cred.CardCode = "134"
+	cred.CardNumber = randomNumberString(13)
+	cred.ExpirationDate = "2020-01"
+	paymentProfile := &PaymentProfile{}
+	paymentProfile.Payment.CreditCard = cred
+	paymentProfile.BillTo.Address = randomString(10)
+	paymentProfile.BillTo.FirstName = randomString(10)
+	paymentProfile.BillTo.LastName = randomString(10)
+	paymentProfile.BillTo.Address = randomString(10)
+	paymentProfile.BillTo.Company = randomString(10)
+	paymentProfile.CustomerType = "individual"
+	return paymentProfile
+}
+
+func randomProfile() Profile {
+	p := Profile{}
+	p.Email = randomString(10) + "@gmail.com"
+	p.MerchantCustomerId = randomNumberString(10)
+	p.PaymentProfile = randomPaymenProfile()
+	return p
+}
+
 func TestCreateCustomerProfile(t *testing.T) {
 	c := authorize.NewTestClient()
 	r := &CreateCustomerProfileRequest{}
-	r.Profile.PaymentProfile.CustomerType = "individual"
-	r.Profile.Email = randomString(10) + "@gmail.com"
-	cred := &CreditCard{}
-	cred.CardCode = "134"
-	cred.CardNumber = randomString(13)
-	cred.ExpirationDate = "2020-01"
-	r.Profile.PaymentProfile.Payment.CreditCard = cred
-	r.Profile.PaymentProfile.BillTo.Address = randomString(10)
-	r.Profile.PaymentProfile.BillTo.FirstName = randomString(10)
-	r.Profile.PaymentProfile.BillTo.LastName = randomString(10)
-	r.Profile.PaymentProfile.BillTo.Address = randomString(10)
-	r.Profile.PaymentProfile.BillTo.Company = randomString(10)
+	r.Profile = randomProfile()
 
 	resp := c.Do(r)
 
