@@ -27,24 +27,15 @@ type Message struct {
 
 type Response struct {
 	Messages Message `json:"messages"`
-	err      error
-}
-
-func (r *Response) Error() string {
-	if r.err == nil {
-		return ""
-	}
-	return r.err.Error()
+	Err      error
 }
 
 func ParseResponse(buff []byte) (r *Response) {
 	log.Println(string(buff))
 	r = &Response{}
-	err := json.Unmarshal(buff, r)
+	r.Err = json.Unmarshal(buff, r)
 
-	r.err = err
-	if err != nil {
-		log.Println(string(buff))
+	if r.Err != nil {
 		return
 	}
 
@@ -52,13 +43,11 @@ func ParseResponse(buff []byte) (r *Response) {
 	for i := range r.Messages.Messages {
 		if r.Messages.Code == "Error" {
 			mErr := &Error{}
-			err = json.Unmarshal(r.Messages.Messages[i], mErr)
-			if err != nil {
-				r.err = err
+			r.Err = json.Unmarshal(r.Messages.Messages[i], mErr)
+			if r.Err != nil {
 				return
 			}
-			err = parseError(mErr)
-			r.err = err
+			r.Err = parseError(mErr)
 			return
 		}
 	}

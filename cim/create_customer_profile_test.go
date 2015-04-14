@@ -3,6 +3,7 @@ package cim
 import (
 	"math/rand"
 	"testing"
+	"time"
 
 	"github.com/eliothedeman/authorize"
 )
@@ -12,6 +13,9 @@ const (
 	TEST_VISA = "4007000000027"
 )
 
+func init() {
+	rand.Seed(time.Now().Unix())
+}
 func randomString(length int) string {
 	str := make([]byte, length)
 	for i := range str {
@@ -60,7 +64,11 @@ func TestCreateCustomerProfile(t *testing.T) {
 
 	resp := c.Do(r)
 
-	if resp.Error() != "" {
-		t.Error(resp.Error())
+	if resp.Err != nil {
+		t.Error(resp.Err)
 	}
+}
+
+func TestCreateCustomerProfileBadCard(t *testing.T) {
+
 }

@@ -50,7 +50,7 @@ func (c *Client) Do(r Request) (resp *Response) {
 	r.SetAuth(c.auth)
 	buff, err := json.Marshal(RequestBody(r))
 	if err != nil {
-		resp.err = err
+		resp.Err = err
 		return
 	}
 
@@ -59,13 +59,13 @@ func (c *Client) Do(r Request) (resp *Response) {
 
 	req, err := http.NewRequest("POST", c.url, c.buffer)
 	if err != nil {
-		resp.err = err
+		resp.Err = err
 		return
 	}
 	req.Header.Add("Content-Type", "application/json; charset=utf-8")
 	httpResp, err := c.httpClient.Do(req)
 	if err != nil {
-		resp.err = err
+		resp.Err = err
 		return
 	}
 
@@ -76,12 +76,12 @@ func (c *Client) Do(r Request) (resp *Response) {
 	index := bytes.Index(buff, []byte("{"))
 	buff = buff[index:]
 	if index == -1 {
-		resp.err = errors.New("Invalid json")
+		resp.Err = errors.New("Invalid json")
 		return
 	}
 	httpResp.Body.Close()
 	if err != nil {
-		resp.err = err
+		resp.Err = err
 		return
 	}
 
