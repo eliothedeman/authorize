@@ -85,6 +85,7 @@ func (c *Client) Do(r Request) (resp *Response) {
 		return
 	}
 
-	resp = ParseResponse(buff)
+	resp.ResponseStruct = r.ResponseStruct()
+	resp = ParseResponse(resp, buff)
 	return
 }

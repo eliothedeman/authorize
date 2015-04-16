@@ -1,23 +1,10 @@
 package authorize
 
-import (
-	"encoding/json"
-	"errors"
-	"log"
-)
+import "encoding/json"
 
 type Error struct {
 	Code string `json:"code"`
 	Text string `json:"text"`
-}
-
-func parseError(e *Error) error {
-	err, ok := errMap[e.Code]
-	if !ok {
-		log.Println("unknown error code", e.Code)
-		return errors.New(e.Text)
-	}
-	return err
 }
 
 type Message struct {
@@ -26,16 +13,18 @@ type Message struct {
 }
 
 type Response struct {
-	Messages Message `json:"messages"`
-	Err      error
+	Messages       Message `json:"messages"`
+	Raw            json.RawMessage
+	ResponseStruct interface{}
+	Err            error
 }
 
-func ParseResponse(buff []byte) (r *Response) {
-	r = &Response{}
+func ParseResponse(r *Response, buff []byte) *Response {
+	r.Raw = buff
 	r.Err = json.Unmarshal(buff, r)
 
 	if r.Err != nil {
-		return
+		return r
 	}
 
 	// parse out to see if we have an error in the message
@@ -44,11 +33,13 @@ func ParseResponse(buff []byte) (r *Response) {
 			mErr := &Error{}
 			r.Err = json.Unmarshal(r.Messages.Messages[i], mErr)
 			if r.Err != nil {
-				return
+				return r
 			}
 			r.Err = parseError(mErr)
-			return
+			return r
 		}
 	}
-	return
+
+	r.Err = json.Unmarshal(buff, r.ResponseStruct)
+	return r
 }
