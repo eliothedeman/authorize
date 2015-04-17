@@ -82,5 +82,4 @@ func TestCreateCustomerProfileBadCard(t *testing.T) {
 	if resp.Err != authorize.INVALID_CARD_NUMBER {
 		t.Error("Expected INVALID_CARD_NUMBER got", resp.Err)
 	}
-
 }
