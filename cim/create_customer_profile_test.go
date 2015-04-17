@@ -1,9 +1,9 @@
 package cim
 
 import (
+	"log"
 	"math/rand"
 	"testing"
-	"time"
 
 	"github.com/eliothedeman/authorize"
 )
@@ -13,9 +13,6 @@ const (
 	TEST_VISA = "4007000000027"
 )
 
-func init() {
-	rand.Seed(time.Now().Unix())
-}
 func randomString(length int) string {
 	str := make([]byte, length)
 	for i := range str {
@@ -63,6 +60,17 @@ func randomCreateProfileRequest() *CreateCustomerProfileRequest {
 	return r
 }
 
+func createRandomeProfile() *Profile {
+	r := randomCreateProfileRequest()
+	c := authorize.NewTestClient()
+	resp := c.Do(r)
+	if resp.Err != nil {
+		log.Fatal(resp.Err)
+	}
+
+	return &r.Profile
+}
+
 func TestCreateCustomerProfile(t *testing.T) {
 	c := authorize.NewTestClient()
 	r := randomCreateProfileRequest()
@@ -79,7 +87,7 @@ func TestCreateCustomerProfileBadCard(t *testing.T) {
 	r.Profile.PaymentProfile.Payment.CreditCard.CardNumber = randomString(13)
 	resp := c.Do(r)
 
-	if resp.Err != authorize.INVALID_CARD_NUMBER {
+	if resp.Err != authorize.INVALID_CONTENT {
 		t.Error("Expected INVALID_CARD_NUMBER got", resp.Err)
 	}
 }

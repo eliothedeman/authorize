@@ -4,16 +4,16 @@ import "github.com/eliothedeman/authorize/auth"
 
 type CreateCustomerProfileRequest struct {
 	*auth.MerchantAuth `json:"merchantAuthentication,omitempty"`
-	RefId              string                         `json:"refId,omitempty"`
-	Profile            Profile                        `json:"profile,omitempty"`
-	Response           *CreateCustomerProfileResponse `json:"-,omitempty"`
+	RefId              string  `json:"refId,omitempty"`
+	Profile            Profile `json:"profile,omitempty"`
 }
 
 type CreateCustomerProfileResponse struct {
+	CustomerProfileId string `json:"customerProfileId"`
 }
 
 func (c *CreateCustomerProfileRequest) ResponseStruct() interface{} {
-	return c.Response
+	return &CreateCustomerProfileResponse{}
 }
 
 func (c *CreateCustomerProfileRequest) SetAuth(a *auth.MerchantAuth) {
