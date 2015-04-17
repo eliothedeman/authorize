@@ -12,6 +12,7 @@ var (
 )
 
 func parseError(e *Error) error {
+	log.Println(e.Text)
 	err, ok := errMap[e.Code]
 	if !ok {
 		log.Println("unknown error code", e.Code)

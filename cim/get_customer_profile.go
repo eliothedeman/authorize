@@ -9,10 +9,11 @@ type GetCustomerProfileRequest struct {
 }
 
 type GetCustomerProfileResponse struct {
+	Profile *Profile `json:"profile"`
 }
 
 func (c *GetCustomerProfileRequest) ResponseStruct() interface{} {
-	return 0
+	return &GetCustomerProfileResponse{}
 }
 
 func (c *GetCustomerProfileRequest) SetAuth(a *auth.MerchantAuth) {

@@ -1,11 +1,10 @@
-package cim
+package authorize
 
 import (
-	"log"
 	"math/rand"
 	"testing"
 
-	"github.com/eliothedeman/authorize"
+	"github.com/eliothedeman/authorize/cim"
 )
 
 const (
@@ -30,12 +29,12 @@ func randomNumberString(length int) string {
 	return string(str)
 }
 
-func randomPaymenProfile() *PaymentProfile {
-	cred := &CreditCard{}
+func randomPaymenProfile() *cim.PaymentProfile {
+	cred := &cim.CreditCard{}
 	cred.CardCode = "134"
 	cred.CardNumber = randomNumberString(13)
 	cred.ExpirationDate = "2020-01"
-	paymentProfile := &PaymentProfile{}
+	paymentProfile := &cim.PaymentProfile{}
 	paymentProfile.Payment.CreditCard = cred
 	paymentProfile.BillTo.Address = randomString(10)
 	paymentProfile.BillTo.FirstName = randomString(10)
@@ -46,48 +45,47 @@ func randomPaymenProfile() *PaymentProfile {
 	return paymentProfile
 }
 
-func randomProfile() Profile {
-	p := Profile{}
+func randomProfile() cim.Profile {
+	p := cim.Profile{}
 	p.Email = randomString(10) + "@gmail.com"
 	p.MerchantCustomerId = randomNumberString(10)
-	p.PaymentProfile = randomPaymenProfile()
+	p.PaymentProfiles = []*cim.PaymentProfile{randomPaymenProfile()}
 	return p
 }
 
-func randomCreateProfileRequest() *CreateCustomerProfileRequest {
-	r := &CreateCustomerProfileRequest{}
+func randomCreateProfileRequest() *cim.CreateCustomerProfileRequest {
+	r := &cim.CreateCustomerProfileRequest{}
 	r.Profile = randomProfile()
 	return r
 }
 
-func createRandomeProfile() *Profile {
-	r := randomCreateProfileRequest()
-	c := authorize.NewTestClient()
-	resp := c.Do(r)
-	if resp.Err != nil {
-		log.Fatal(resp.Err)
-	}
-
-	return &r.Profile
+// creates a new randome profile, and returns the id of the new profile
+func createRandomeProfile() string {
+	c := NewTestClient()
+	r, _ := c.CreateCustomerProfile(randomProfile())
+	return r.CustomerProfileId
 }
 
 func TestCreateCustomerProfile(t *testing.T) {
-	c := authorize.NewTestClient()
-	r := randomCreateProfileRequest()
-	resp := c.Do(r)
+	c := NewTestClient()
+	resp, err := c.CreateCustomerProfile(randomProfile())
+	if err != nil {
+		t.Error(err)
+	}
 
-	if resp.Err != nil {
-		t.Error(resp.Err)
+	if resp.CustomerProfileId == "" {
+		t.Fail()
 	}
 }
 
 func TestCreateCustomerProfileBadCard(t *testing.T) {
-	c := authorize.NewTestClient()
-	r := randomCreateProfileRequest()
-	r.Profile.PaymentProfile.Payment.CreditCard.CardNumber = randomString(13)
-	resp := c.Do(r)
+	c := NewTestClient()
+	p := randomProfile()
+	p.PaymentProfiles[0].Payment.CreditCard.CardNumber = randomString(13)
 
-	if resp.Err != authorize.INVALID_CONTENT {
-		t.Error("Expected INVALID_CARD_NUMBER got", resp.Err)
+	_, err := c.CreateCustomerProfile(p)
+
+	if err != INVALID_CONTENT {
+		t.Error(err)
 	}
 }
