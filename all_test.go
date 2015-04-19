@@ -118,3 +118,13 @@ func TestCreateCustomerPaymentProfile(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestCreateCustomerPaymentProfileBadId(t *testing.T) {
+	c := NewTestClient()
+	pp := randomPaymenProfile()
+	_, err := c.CreateCustomerPaymentProfile(randomNumberString(13), pp)
+
+	if err != INVALID_CONTENT {
+		t.Error(err)
+	}
+}
