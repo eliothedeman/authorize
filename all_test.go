@@ -89,3 +89,32 @@ func TestCreateCustomerProfileBadCard(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestGetCustomerProfile(t *testing.T) {
+	c := NewTestClient()
+	id := createRandomeProfile()
+	_, err := c.GetCustomerProfile(id)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestGetCustomerProfileBadId(t *testing.T) {
+	c := NewTestClient()
+	id := randomNumberString(10)
+	_, err := c.GetCustomerProfile(id)
+	if err != INVALID_CONTENT {
+		t.Error(err)
+	}
+}
+
+func TestCreateCustomerPaymentProfile(t *testing.T) {
+	c := NewTestClient()
+	id := createRandomeProfile()
+	pp := randomPaymenProfile()
+	_, err := c.CreateCustomerPaymentProfile(id, pp)
+
+	if err != nil {
+		t.Error(err)
+	}
+}

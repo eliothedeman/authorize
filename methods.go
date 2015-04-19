@@ -18,3 +18,12 @@ func (c *Client) GetCustomerProfile(profileId string) (*cim.Profile, error) {
 	resp := r.ResponseStruct.(*cim.GetCustomerProfileResponse)
 	return resp.Profile, r.Err
 }
+
+func (c *Client) CreateCustomerPaymentProfile(customerId string, pp *cim.PaymentProfile) (customerProfileId string, err error) {
+	req := &cim.CreateCustomerPaymentProfileRequest{}
+	req.PaymentProfile = pp
+	req.CustomerProfileId = customerId
+	r := c.Do(req)
+	resp := r.ResponseStruct.(*cim.CreateCustomerPaymentProfileResponse)
+	return resp.CustomerPaymentProfileId, r.Err
+}
