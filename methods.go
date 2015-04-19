@@ -3,20 +3,18 @@ package authorize
 import "github.com/eliothedeman/authorize/cim"
 
 // create a new customer profile in authorize.net
-func (c *Client) CreateCustomerProfile(p cim.Profile) (string, err error) {
+func (c *Client) CreateCustomerProfile(p cim.Profile) (string, error) {
 	req := &cim.CreateCustomerProfileRequest{}
 	req.Profile = p
 	r := c.Do(req)
-	err = r.Err
 	resp := r.ResponseStruct.(*cim.CreateCustomerProfileResponse)
-	return resp.CustomerProfileId, err
+	return resp.CustomerProfileId, r.Err
 }
 
-func (c *Client) GetCustomerProfile(profileId string) (*cim.Profile, err error) {
+func (c *Client) GetCustomerProfile(profileId string) (*cim.Profile, error) {
 	req := &cim.GetCustomerProfileRequest{}
 	req.CustomerProfileId = profileId
 	r := c.Do(req)
-	err = r.Err
 	resp := r.ResponseStruct.(*cim.GetCustomerProfileResponse)
-	return resp.Profile, err
+	return resp.Profile, r.Err
 }

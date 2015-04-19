@@ -1,9 +1,6 @@
 package authorize
 
-import (
-	"log"
-	"testing"
-)
+import "testing"
 
 func TestGetCustomerProfile(t *testing.T) {
 	c := NewTestClient()
@@ -17,10 +14,8 @@ func TestGetCustomerProfile(t *testing.T) {
 func TestGetCustomerProfileBadId(t *testing.T) {
 	c := NewTestClient()
 	id := randomNumberString(10)
-	r, err := c.GetCustomerProfile(id)
+	_, err := c.GetCustomerProfile(id)
 	if err != INVALID_CONTENT {
 		t.Error(err)
 	}
-
-	log.Println(r)
 }

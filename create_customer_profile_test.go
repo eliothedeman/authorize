@@ -62,18 +62,18 @@ func randomCreateProfileRequest() *cim.CreateCustomerProfileRequest {
 // creates a new randome profile, and returns the id of the new profile
 func createRandomeProfile() string {
 	c := NewTestClient()
-	r, _ := c.CreateCustomerProfile(randomProfile())
-	return r.CustomerProfileId
+	id, _ := c.CreateCustomerProfile(randomProfile())
+	return id
 }
 
 func TestCreateCustomerProfile(t *testing.T) {
 	c := NewTestClient()
-	resp, err := c.CreateCustomerProfile(randomProfile())
+	id, err := c.CreateCustomerProfile(randomProfile())
 	if err != nil {
 		t.Error(err)
 	}
 
-	if resp.CustomerProfileId == "" {
+	if id == "" {
 		t.Fail()
 	}
 }
