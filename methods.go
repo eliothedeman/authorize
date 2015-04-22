@@ -47,3 +47,12 @@ func (c *Client) CreateCustomerPaymentProfileTransaction(t *cim.Transaction) (st
 
 	return resp.CustomerPaymentProfileId, r.Err
 }
+
+func (c *Client) RefundTransaction(t *cim.Transaction) (string, error) {
+	req := &cim.CreateCustomerProfileTransactionRequest{}
+	req.Transaction.ProfileTransRefund = t
+	r := c.Do(req)
+
+	resp := r.ResponseStruct.(*cim.CreateCustomerProfileTransactionResponse)
+	return resp.CustomerPaymentProfileId, r.Err
+}

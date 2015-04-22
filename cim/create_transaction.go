@@ -4,10 +4,8 @@ import "github.com/eliothedeman/authorize/auth"
 
 type CreateCustomerProfileTransactionRequest struct {
 	*auth.MerchantAuth `json:"merchantAuthentication,omitempty"`
-	RefId              string `json:"refId,omitempty"`
-	Transaction        struct {
-		ProfileTransAuthCapture *Transaction `json:"profileTransAuthCapture"`
-	} `json:"transaction,omitempty"`
+	RefId              string       `json:"refId,omitempty"`
+	Transaction        *Transaction `json:"transactionRequest,omitempty"`
 }
 
 type CreateCustomerProfileTransactionResponse struct {

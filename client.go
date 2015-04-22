@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
+	"log"
 	"net/http"
 
 	"github.com/eliothedeman/authorize/auth"
@@ -79,6 +80,7 @@ func (c *Client) Do(r Request) (resp *Response) {
 		resp.Err = errors.New("Invalid json")
 		return
 	}
+	log.Println(string(buff))
 	httpResp.Body.Close()
 	if err != nil {
 		resp.Err = err
