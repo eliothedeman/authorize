@@ -1,6 +1,7 @@
 package authorize
 
 import (
+	"log"
 	"math/rand"
 	"testing"
 
@@ -29,6 +30,14 @@ func randomNumberString(length int) string {
 	return string(str)
 }
 
+func fakeAmex() *cim.CreditCard {
+	c := &cim.CreditCard{}
+	c.CardCode = "1234"
+	c.CardNumber = TEST_AMEX
+	c.ExpirationDate = "2020-01"
+	return c
+}
+
 func randomPaymenProfile() *cim.PaymentProfile {
 	cred := &cim.CreditCard{}
 	cred.CardCode = "134"
@@ -43,6 +52,29 @@ func randomPaymenProfile() *cim.PaymentProfile {
 	paymentProfile.BillTo.Company = randomString(10)
 	paymentProfile.CustomerType = "individual"
 	return paymentProfile
+}
+
+func randomTransaction(c_id, cpp_id, ship_id string) *cim.Transaction {
+	t := &cim.Transaction{}
+	t.Amount = randomNumberString(4)
+	t.CustomerProfileId = c_id
+	t.CustomerShippingAddressId = ship_id
+	t.CustomerPaymentProfileId = cpp_id
+	return t
+}
+
+func randomAddress() *cim.Address {
+	a := &cim.Address{}
+	a.Address = randomString(10)
+	a.City = randomString(10)
+	a.Company = randomString(10)
+	a.Country = randomString(20)
+	a.FirstName = randomString(10)
+	a.LastName = randomString(10)
+	a.PhoneNumber = randomNumberString(10)
+	a.FaxNumber = randomNumberString(10)
+	a.Zip = randomNumberString(4)
+	return a
 }
 
 func randomProfile() cim.Profile {
@@ -60,7 +92,7 @@ func randomCreateProfileRequest() *cim.CreateCustomerProfileRequest {
 }
 
 // creates a new randome profile, and returns the id of the new profile
-func createRandomeProfile() string {
+func createRandomProfile() string {
 	c := NewTestClient()
 	id, _ := c.CreateCustomerProfile(randomProfile())
 	return id
@@ -92,7 +124,7 @@ func TestCreateCustomerProfileBadCard(t *testing.T) {
 
 func TestGetCustomerProfile(t *testing.T) {
 	c := NewTestClient()
-	id := createRandomeProfile()
+	id := createRandomProfile()
 	_, err := c.GetCustomerProfile(id)
 	if err != nil {
 		t.Error(err)
@@ -110,7 +142,7 @@ func TestGetCustomerProfileBadId(t *testing.T) {
 
 func TestCreateCustomerPaymentProfile(t *testing.T) {
 	c := NewTestClient()
-	id := createRandomeProfile()
+	id := createRandomProfile()
 	pp := randomPaymenProfile()
 	_, err := c.CreateCustomerPaymentProfile(id, pp)
 
@@ -127,4 +159,33 @@ func TestCreateCustomerPaymentProfileBadId(t *testing.T) {
 	if err != INVALID_CONTENT {
 		t.Error(err)
 	}
+}
+
+func TestCreateShippingAddress(t *testing.T) {
+	c := NewTestClient()
+	id := createRandomProfile()
+	a := randomAddress()
+	id, err := c.CreateCustomerSippingAddress(id, a)
+	log.Println(id)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestCreateCustomerPaymanetProfileTransaction(t *testing.T) {
+	c := NewTestClient()
+	id := createRandomProfile()
+	pp := randomPaymenProfile()
+	pp.Payment.CreditCard = fakeAmex()
+	a := randomAddress()
+	ship_id, _ := c.CreateCustomerSippingAddress(id, a)
+	cpp_id, _ := c.CreateCustomerPaymentProfile(id, pp)
+	trans := randomTransaction(id, cpp_id, ship_id)
+
+	_, err := c.CreateCustomerPaymentProfileTransaction(trans)
+
+	if err != nil {
+		t.Error(err)
+	}
+
 }

@@ -8,6 +8,35 @@ type Profile struct {
 	PaymentProfiles    []*PaymentProfile `json:"paymentProfiles,omitempty"`
 }
 
+type Transaction struct {
+	Amount                    string  `json:"amount,omitempty"`
+	Tax                       *Charge `json:"tax,omitempty"`
+	Shipping                  *Charge `json:"shipping,omitempty"`
+	Duty                      *Charge `json:"duty,omitempty"`
+	CustomerProfileId         string  `json:"customerProfileId"`
+	CustomerPaymentProfileId  string  `json:"customerPaymentProfileId"`
+	CustomerShippingAddressId string  `json:"customerShippingAddressId"`
+}
+
+type Charge struct {
+	Amount      string `json:"amount"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type Address struct {
+	FirstName   string `json:"firstName"`
+	LastName    string `json:"lastName"`
+	Company     string `json:"company"`
+	Address     string `json:"address"`
+	City        string `json:"city"`
+	State       string `json:"state"`
+	Zip         string `json:"zip"`
+	Country     string `json:"country"`
+	PhoneNumber string `json:"phoneNumber"`
+	FaxNumber   string `json:"faxNumber"`
+}
+
 type PaymentProfile struct {
 	CustomerType string      `json:"customerType,omitempty"`
 	BillTo       Billing     `json:"billTo,omitempty"`

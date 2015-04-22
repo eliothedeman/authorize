@@ -27,3 +27,23 @@ func (c *Client) CreateCustomerPaymentProfile(customerId string, pp *cim.Payment
 	resp := r.ResponseStruct.(*cim.CreateCustomerPaymentProfileResponse)
 	return resp.CustomerPaymentProfileId, r.Err
 }
+
+func (c *Client) CreateCustomerSippingAddress(profile_id string, a *cim.Address) (string, error) {
+
+	req := &cim.CreateShippingAddressRequest{}
+	req.CustomerProfileId = profile_id
+	req.Address = a
+	r := c.Do(req)
+	resp := r.ResponseStruct.(*cim.CreateShippingAddressResponse)
+	return resp.CustomerShippingAddressId, r.Err
+}
+
+func (c *Client) CreateCustomerPaymentProfileTransaction(t *cim.Transaction) (string, error) {
+	req := &cim.CreateCustomerProfileTransactionRequest{}
+	req.Transaction.ProfileTransAuthCapture = t
+	r := c.Do(req)
+
+	resp := r.ResponseStruct.(*cim.CreateCustomerProfileTransactionResponse)
+
+	return resp.CustomerPaymentProfileId, r.Err
+}
