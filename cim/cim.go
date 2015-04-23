@@ -9,15 +9,13 @@ type Profile struct {
 }
 
 type Transaction struct {
-	Amount   string  `json:"amount,omitempty"`
-	Tax      *Charge `json:"tax,omitempty"`
-	Shipping *Charge `json:"shipping,omitempty"`
-	Duty     *Charge `json:"duty,omitempty"`
-	Profile  struct {
-		CustomerProfileId         string `json:"customerProfileId"`
-		CustomerPaymentProfileId  string `json:"customerPaymentProfileId"`
-		CustomerShippingAddressId string `json:"customerShippingAddressId"`
-	} `json:"profile"`
+	Amount            string  `json:"amount,omitempty"`
+	Tax               *Charge `json:"tax,omitempty"`
+	Shipping          *Charge `json:"shipping,omitempty"`
+	Duty              *Charge `json:"duty,omitempty"`
+	CustomerProfileId string  `json:"customerProfileId"`
+	CardCode          string  `json:"cardCode,omitempty"`
+	PaymentProfileId  string  `json:"paymentProfileId"`
 }
 
 type Charge struct {

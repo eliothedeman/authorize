@@ -4,13 +4,11 @@ import "github.com/eliothedeman/authorize/auth"
 
 type RefundTransactionRequest struct {
 	*auth.MerchantAuth `json:"merchantAuthentication,omitempty"`
-	RefId              string   `json:"refId,omitempty"`
-	CustomerProfileId  string   `json:"customerProfileId"`
-	Address            *Address `json:"address"`
+	RefId              string             `json:"refId,omitempty"`
+	TransactionReqeust TransactionRequest `json:"transactionRequest"`
 }
 
 type RefundTransactionResponse struct {
-	CustomerShippingAddressId string `json:"customerAddressId"`
 }
 
 func (c *RefundTransactionRequest) ResponseStruct() interface{} {
@@ -22,5 +20,5 @@ func (c *RefundTransactionRequest) SetAuth(a *auth.MerchantAuth) {
 }
 
 func (c *RefundTransactionRequest) Method() string {
-	return "createCustomerShippingAddressRequest"
+	return "createTransactionRequest"
 }
