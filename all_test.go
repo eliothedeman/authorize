@@ -1,7 +1,6 @@
 package authorize
 
 import (
-	"log"
 	"math/rand"
 	"testing"
 
@@ -165,7 +164,6 @@ func TestCreateShippingAddress(t *testing.T) {
 	id := createRandomProfile()
 	a := randomAddress()
 	id, err := c.CreateCustomerSippingAddress(id, a)
-	log.Println(id)
 	if err != nil {
 		t.Error(err)
 	}
