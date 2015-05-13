@@ -1,7 +1,6 @@
 package authorize
 
 import (
-	"log"
 	"math/rand"
 	"testing"
 
@@ -58,8 +57,7 @@ func randomTransaction(c_id, cpp_id, ship_id string) *cim.Transaction {
 	t := &cim.Transaction{}
 	t.Amount = randomNumberString(4)
 	t.CustomerProfileId = c_id
-	t.CustomerShippingAddressId = ship_id
-	t.CustomerPaymentProfileId = cpp_id
+	t.PaymentProfileId = cpp_id
 	return t
 }
 
@@ -135,7 +133,7 @@ func TestGetCustomerProfileBadId(t *testing.T) {
 	c := NewTestClient()
 	id := randomNumberString(10)
 	_, err := c.GetCustomerProfile(id)
-	if err != INVALID_CONTENT {
+	if err == nil {
 		t.Error(err)
 	}
 }
@@ -166,7 +164,6 @@ func TestCreateShippingAddress(t *testing.T) {
 	id := createRandomProfile()
 	a := randomAddress()
 	id, err := c.CreateCustomerSippingAddress(id, a)
-	log.Println(id)
 	if err != nil {
 		t.Error(err)
 	}
@@ -187,5 +184,26 @@ func TestCreateCustomerPaymanetProfileTransaction(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+}
+func TestRefundTransaction(t *testing.T) {
+	c := NewTestClient()
+	id := createRandomProfile()
+	pp := randomPaymenProfile()
+	pp.Payment.CreditCard = fakeAmex()
+	a := randomAddress()
+	ship_id, _ := c.CreateCustomerSippingAddress(id, a)
+	cpp_id, _ := c.CreateCustomerPaymentProfile(id, pp)
+	trans := randomTransaction(id, cpp_id, ship_id)
 
+	id, err := c.CreateCustomerPaymentProfileTransaction(trans)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	err = c.RefundTransaction(trans, id)
+
+	if err != nil {
+		t.Error(err)
+	}
 }
