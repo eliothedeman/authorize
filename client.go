@@ -20,27 +20,20 @@ const (
 // A base client for the authorize.net api
 type Client struct {
 	url        string
-	production bool
 	httpClient *http.Client
 	buffer     *bytes.Buffer
 	auth       *auth.MerchantAuth
 }
 
-func NewClient(name, transactionKey string, production bool) *Client {
+func NewClient(name, transactionKey string) *Client {
 	c := &Client{
-		production: production,
 		buffer:     bytes.NewBuffer([]byte{}),
 		httpClient: http.DefaultClient,
+		url:        PRODUCTION_URL,
 		auth: &auth.MerchantAuth{
 			Name:           name,
 			TransactionKey: transactionKey,
 		},
-	}
-
-	if production {
-		c.url = PRODUCTION_URL
-	} else {
-		c.url = SANDBOX_URL
 	}
 
 	return c

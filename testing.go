@@ -16,5 +16,7 @@ func init() {
 	rand.Seed(time.Now().Unix())
 }
 func NewTestClient() *Client {
-	return NewClient(TEST_API_LOGIN_ID, TEST_API_TRANSACTION_KEY, false)
+	c := NewClient(TEST_API_LOGIN_ID, TEST_API_TRANSACTION_KEY)
+	c.url = SANDBOX_URL
+	return c
 }
