@@ -20,3 +20,10 @@ func NewTestClient() *Client {
 	c.url = SANDBOX_URL
 	return c
 }
+
+func NewTestClientWithCredentials(name, transactionKey string) *Client {
+	c := NewClient(name, transactionKey)
+	c.url = SANDBOX_URL
+	return c
+}
+
