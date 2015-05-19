@@ -1,6 +1,6 @@
 package authorize
 
-import "us-west/auth"
+import "github.com/eolexe/authorize/auth"
 
 // An api request for authorize.net
 type Request interface {

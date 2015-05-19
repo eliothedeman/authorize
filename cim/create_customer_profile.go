@@ -1,6 +1,6 @@
 package cim
 
-import "us-west/auth"
+import "github.com/eolexe/authorize/auth"
 
 type CreateCustomerProfileRequest struct {
 	*auth.MerchantAuth `json:"merchantAuthentication,omitempty"`
