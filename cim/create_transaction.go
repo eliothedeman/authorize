@@ -1,6 +1,6 @@
 package cim
 
-import "github.com/eliothedeman/authorize/auth"
+import "us-west/auth"
 
 type CreateTransactionRequest struct {
 	*auth.MerchantAuth `json:"merchantAuthentication,omitempty"`

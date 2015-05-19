@@ -1,6 +1,6 @@
 package authorize
 
-import "github.com/eliothedeman/authorize/cim"
+import "github.com/eolexe/authorize/cim"
 
 const (
 	AUTH_CAPTURE_REQUEST = "authCaptureTransaction"
