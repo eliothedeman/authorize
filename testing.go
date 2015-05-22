@@ -17,6 +17,6 @@ func init() {
 }
 func NewTestClient() *Client {
 	c := NewClient(TEST_API_LOGIN_ID, TEST_API_TRANSACTION_KEY)
-	c.url = SANDBOX_URL
+	c.URL = SANDBOX_URL
 	return c
 }

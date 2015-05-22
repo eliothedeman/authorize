@@ -18,7 +18,7 @@ const (
 
 // A base client for the authorize.net api
 type Client struct {
-	url        string
+	URL        string
 	httpClient *http.Client
 	buffer     *bytes.Buffer
 	auth       *auth.MerchantAuth
@@ -28,7 +28,7 @@ func NewClient(name, transactionKey string) *Client {
 	c := &Client{
 		buffer:     bytes.NewBuffer([]byte{}),
 		httpClient: http.DefaultClient,
-		url:        PRODUCTION_URL,
+		URL:        PRODUCTION_URL,
 		auth: &auth.MerchantAuth{
 			Name:           name,
 			TransactionKey: transactionKey,
@@ -50,7 +50,7 @@ func (c *Client) Do(r Request) (resp *Response) {
 	c.buffer.Reset()
 	c.buffer.Write(buff)
 
-	req, err := http.NewRequest("POST", c.url, c.buffer)
+	req, err := http.NewRequest("POST", c.URL, c.buffer)
 	if err != nil {
 		resp.Err = err
 		return
