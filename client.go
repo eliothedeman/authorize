@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/eliothedeman/authorize/auth"
+	"github.com/eolexe/authorize/auth"
 )
 
 const (

@@ -1,6 +1,6 @@
 package cim
 
-import "github.com/eliothedeman/authorize/auth"
+import "github.com/eolexe/authorize/auth"
 
 type RefundTransactionRequest struct {
 	*auth.MerchantAuth `json:"merchantAuthentication,omitempty"`
