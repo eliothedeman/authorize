@@ -24,6 +24,6 @@ func NewTestClient() *Client {
 func NewTestClientWithCredentials(name, transactionKey string) *Client {
 	log.SetFlags(log.Llongfile)
 	c := NewClient(name, transactionKey)
-	c.url = SANDBOX_URL
+	c.URL = SANDBOX_URL
 	return c
 }
