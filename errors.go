@@ -14,7 +14,7 @@ var (
 func parseError(e *Error) error {
 	err, ok := errMap[e.Code]
 	if !ok {
-		log.Println("unknown error code", e.Code)
+		log.Printf("unknown error code %+v", e)
 		return errors.New(e.Text)
 	}
 

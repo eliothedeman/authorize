@@ -49,9 +49,11 @@ type PaymentInfo struct {
 }
 
 type CreditCard struct {
-	CardNumber     string `json:"cardNumber,omitempty"`
+	CardNumber string `json:"cardNumber,omitempty"`
+	// ExpirationDate string `json:"-,omitempty"`
 	ExpirationDate string `json:"expirationDate,omitempty"`
-	CardCode       string `json:"cardCode,omitempty"`
+	// CardCode       string `json:"-,omitempty"`
+	CardCode string `json:"cardCode,omitempty"`
 }
 type BankAccount struct {
 	AccountType    string `json:"accountType,omitempty"`
