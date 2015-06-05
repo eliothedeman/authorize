@@ -12,6 +12,9 @@ func (c *Client) CreateCustomerProfile(p cim.Profile) (string, error) {
 	req := &cim.CreateCustomerProfileRequest{}
 	req.Profile = p
 	r := c.Do(req)
+	if r.ResponseStruct == nil {
+		return "", r.Err
+	}
 	resp := r.ResponseStruct.(*cim.CreateCustomerProfileResponse)
 	return resp.CustomerProfileId, r.Err
 }
@@ -20,6 +23,9 @@ func (c *Client) GetCustomerProfile(profileId string) (*cim.Profile, error) {
 	req := &cim.GetCustomerProfileRequest{}
 	req.CustomerProfileId = profileId
 	r := c.Do(req)
+	if r.ResponseStruct == nil {
+		return nil, r.Err
+	}
 	resp := r.ResponseStruct.(*cim.GetCustomerProfileResponse)
 	return resp.Profile, r.Err
 }
@@ -29,6 +35,9 @@ func (c *Client) CreateCustomerPaymentProfile(customerId string, pp *cim.Payment
 	req.PaymentProfile = pp
 	req.CustomerProfileId = customerId
 	r := c.Do(req)
+	if r.ResponseStruct == nil {
+		return "", r.Err
+	}
 	resp := r.ResponseStruct.(*cim.CreateCustomerPaymentProfileResponse)
 	return resp.CustomerPaymentProfileId, r.Err
 }
@@ -39,6 +48,9 @@ func (c *Client) CreateCustomerSippingAddress(profile_id string, a *cim.Address)
 	req.CustomerProfileId = profile_id
 	req.Address = a
 	r := c.Do(req)
+	if r.ResponseStruct == nil {
+		return "", r.Err
+	}
 	resp := r.ResponseStruct.(*cim.CreateShippingAddressResponse)
 	return resp.CustomerShippingAddressId, r.Err
 }
@@ -56,6 +68,9 @@ func (c *Client) CreateCustomerPaymentProfileTransaction(t *cim.Transaction) (st
 	req.TransactionRequest.Shipping = t.Shipping
 	req.TransactionRequest.Type = AUTH_CAPTURE_REQUEST
 	r := c.Do(req)
+	if r.ResponseStruct == nil {
+		return "", r.Err
+	}
 	resp := r.ResponseStruct.(*cim.CreateTransactionResponse)
 
 	return resp.TransactionId, r.Err
